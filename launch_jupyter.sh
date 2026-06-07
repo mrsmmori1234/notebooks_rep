@@ -22,7 +22,9 @@ fi
 
 # Jupyter Lab がすでに起動しているか確認
 if pgrep -f "jupyter-lab" > /dev/null; then
-    echo "⚠️ Jupyter Lab is already running. Nothing to do."
+    echo "⚠️ Jupyter Lab is already running."
+    echo "📋 Access URL:"
+    jupyter server list | grep "http" | awk '{print $1}'
     exit 0
 fi
 
@@ -38,10 +40,16 @@ nohup jupyter lab > "$logfile" 2>&1 &
 
 if [ $? -eq 0 ]; then
     echo "✅ Launch Jupyter successful (log: $logfile)"
-    echo "⏳ Waiting for Jupyter to start..."
-    sleep 5
-    echo "📋 Jupyter Server List:"
-    jupyter server list
+    echo "⏳ Fetching full URL..."
+    # URLが発行されるまで最大20秒間待機（2秒ごとにチェック）
+    for i in {1..10}; do
+        URL=$(jupyter server list | grep "http" | awk '{print $1}')
+        if [ -n "$URL" ]; then
+            echo -e "\n📋 Access URL:\n$URL\n"
+            break
+        fi
+        sleep 2
+    done
 else
     echo "❌ Launch Jupyter failed"
 fi
