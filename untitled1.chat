@@ -1,0 +1,37 @@
+{
+  "messages": [
+    {
+      "id": "d91c46c4-50a0-4978-9d66-fae737880b96",
+      "type": "msg",
+      "sender": "0468b3e7e390483f9c1d7df4be56261b",
+      "time": 1780824037.6563492,
+      "body": "test",
+      "raw_time": false
+    }
+  ],
+  "users": {
+    "0468b3e7e390483f9c1d7df4be56261b": {
+      "display_name": "Anonymous Cyllene",
+      "avatar_url": null,
+      "bot": false,
+      "name": "Anonymous Cyllene",
+      "mention_name": "Anonymous-Cyllene",
+      "username": "0468b3e7e390483f9c1d7df4be56261b",
+      "color": "var(--jp-collaborator-color2)",
+      "initials": "AC"
+    },
+    "jupyter-ai-personas::jupyter_ai_acp_client::CopilotAcpPersona": {
+      "display_name": "Copilot",
+      "initials": null,
+      "bot": true,
+      "username": "jupyter-ai-personas::jupyter_ai_acp_client::CopilotAcpPersona",
+      "name": "Copilot",
+      "color": null,
+      "avatar_url": "/api/ai/avatars/jupyter-ai-personas%3A%3Ajupyter_ai_acp_client%3A%3ACopilotAcpPersona"
+    }
+  },
+  "attachments": {},
+  "metadata": {
+    "id": "46be8ef2-0b9c-4428-b4f3-05ee32e2b7cd"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "messages": [],
+  "users": {
+    "jupyter-ai-personas::jupyter_ai_acp_client::CopilotAcpPersona": {
+      "color": null,
+      "name": "Copilot",
+      "display_name": "Copilot",
+      "bot": true,
+      "username": "jupyter-ai-personas::jupyter_ai_acp_client::CopilotAcpPersona",
+      "initials": null,
+      "avatar_url": "/api/ai/avatars/jupyter-ai-personas%3A%3Ajupyter_ai_acp_client%3A%3ACopilotAcpPersona"
+    }
+  },
+  "attachments": {},
+  "metadata": {
+    "id": "e9232e2d-da0d-40a2-accf-ba7b0612e1d9"
+  }
+}

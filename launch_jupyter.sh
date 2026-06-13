@@ -36,7 +36,8 @@ timestamp=$(date +"%Y%m%d_%H%M%S")
 logfile="$HOME/notebooks/log/jupyterlab_$timestamp.log"
 
 # Jupyter Lab 起動（nohupでバックグラウンド実行）
-nohup jupyter lab > "$logfile" 2>&1 &
+# nohup jupyter lab > "$logfile" 2>&1 &
+nohup jupyter lab --preferred-dir ~/notebooks > "$logfile" 2>&1 &
 
 if [ $? -eq 0 ]; then
     echo "✅ Launch Jupyter successful (log: $logfile)"
