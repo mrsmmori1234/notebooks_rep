@@ -20,12 +20,10 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Jupyter Lab がすでに起動しているか確認
-if pgrep -f "jupyter-lab" > /dev/null; then
-    echo "⚠️ Jupyter Lab is already running."
-    echo "📋 Access URL:"
-    jupyter server list | grep "http" | awk '{print $1}'
-    exit 0
+# Jupyter Lab がすでに起動しているか確認 (静かにチェック)
+if pgrep -u "$USER" -f "jupyter-lab" > /dev/null; then
+    # すでに起動している場合は何もせず終了 (bashrc 向け)
+    [[ "$0" != "$BASH_SOURCE" ]] && return 0 || exit 0
 fi
 
 # ログディレクトリ作成
@@ -36,8 +34,8 @@ timestamp=$(date +"%Y%m%d_%H%M%S")
 logfile="$HOME/notebooks/log/jupyterlab_$timestamp.log"
 
 # Jupyter Lab 起動（nohupでバックグラウンド実行）
-# nohup jupyter lab > "$logfile" 2>&1 &
-nohup jupyter lab --preferred-dir ~/notebooks > "$logfile" 2>&1 &
+# --port-retries=0 を指定することで、8888が埋まっている時に8889に逃げるのを防ぐ
+nohup jupyter lab --port=8888 --port-retries=0 > "$logfile" 2>&1 &
 
 if [ $? -eq 0 ]; then
     echo "✅ Launch Jupyter successful (log: $logfile)"
