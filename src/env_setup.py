@@ -30,6 +30,12 @@ def init_analysis_env():
     import yfinance as yf
     from src.data_loader import load_local_data
     from src.gemini_helper import ai
+    from datetime import datetime, timedelta
+    import xlwings as xw
+    import os
+    import re
+    import time
+    import hashlib
     
     # Mapping for easier maintenance of injected libraries
     libs = {
@@ -40,6 +46,9 @@ def init_analysis_env():
         'sns': sns,
         'load_local_data': load_local_data,
         'ai': ai,
+        'datetime': datetime,
+        'timedelta': timedelta,
+        'xw': xw,
     }
 
     # Inject imports directly into the caller's Jupyter environment (__main__)
@@ -49,7 +58,17 @@ def init_analysis_env():
     
     # Apply basic styles or configurations
     sns.set_theme(style="darkgrid")
+
+    # Pandas display options
+    pd.set_option("display.float_format", "{:.2f}".format)
+    pd.set_option("display.width", 120)
+    pd.set_option("display.max_rows", 50)
+    pd.set_option("display.max_columns", 20)
     
+    # IPython display settings
+    if ip:
+        ip.ast_node_interactivity = "all"
+
     print(f"🚀 Analysis environment initialized: {', '.join(libs.keys())} are ready.")
 
 def _gemini_magic_handler(line, cell):
