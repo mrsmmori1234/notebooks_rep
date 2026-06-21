@@ -1,26 +1,10 @@
 import sys
-import subprocess
-import importlib.util
 from pathlib import Path
 import os
+from google import genai
 from typing import Any
 from IPython.core.getipython import get_ipython
 from IPython.display import display, Markdown
-
-def _ensure_installed(package_name: str, import_name: str = None):
-    """パッケージがインストールされていない場合に自動的に pip install を実行します。"""
-    if import_name is None:
-        import_name = package_name
-    
-    if importlib.util.find_spec(import_name) is None:
-        print(f"📦 パッケージ '{package_name}' が見つかりません。インストールしています...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
-        importlib.invalidate_caches()  # インストールしたばかりのパッケージを認識させるために必要
-        print(f"✅ '{package_name}' のインストールが完了しました。")
-
-# スクリプトの動作に必要な google-genai の確認
-_ensure_installed("google-genai", "google.genai")
-from google import genai
 
 # --- Configuration ---
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
@@ -39,12 +23,6 @@ if ip:
 # 2. Function to globally inject basic data analysis and visualization libraries
 def init_analysis_env():
     """Imports major libraries into the Notebook's global namespace"""
-    # 分析に必要な外部ライブラリの自動インストール
-    external_deps = ["pandas", "numpy", "matplotlib", "seaborn", "yfinance", "xlwings"]
-    for pkg in external_deps:
-        _ensure_installed(pkg)
-
-    # ライブラリのインポート
     import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
