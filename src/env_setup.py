@@ -19,11 +19,11 @@ def _ensure_installed(package_name: str, import_name: str = None):
         print(f"✅ '{package_name}' のインストールが完了しました。")
 
 # スクリプトの動作に必要な google-genai の確認
-_ensure_installed("google-genai", "google.genai")
-from google import genai
+#_ensure_installed("google-genai", "google.genai")
+#from google import genai
 
 # --- Configuration ---
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+#GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
 # 1. Project Root & Path Setup
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -51,7 +51,7 @@ def init_analysis_env():
     import seaborn as sns
     import yfinance as yf
     from src.data_loader import load_local_data
-    from src.gemini_helper import ai
+    #from src.gemini_helper import ai
     from datetime import datetime, timedelta
     import xlwings as xw
     import os
@@ -67,7 +67,7 @@ def init_analysis_env():
         'plt': plt,
         'sns': sns,
         'load_local_data': load_local_data,
-        'ai': ai,
+        #'ai': ai,
         'datetime': datetime,
         'timedelta': timedelta,
         'xw': xw,
