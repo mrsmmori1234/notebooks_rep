@@ -25,7 +25,9 @@ def show_tracker():
     def load_data():
         if csv_file.exists():
             df = pd.read_csv(csv_file)
-            df['Date'] = pd.to_datetime(df['Date']).dt.date
+            if not df.empty:
+                # ──【ここを変更】確実に datetime.date 型に変換する ──
+                df['Date'] = pd.to_datetime(df['Date']).dt.date
             return df
         return pd.DataFrame(columns=['Date', 'Exercise'])
 
