@@ -18,7 +18,7 @@ def show_tracker():
     exercises = ["9min Strength Training", "Plank Trainign", "sqwat training"]
     checkboxes = [widgets.Checkbox(value=False, description=ex) for ex in exercises]
 
-    note_input = widgets.Text(placeholder="Optional note (e.g., felt great, 5km done)", layout=widgets.Layout(width='300px'))
+    note_input = widgets.Text(placeholder="xxx", layout=widgets.Layout(width='300px'))
     submit_btn = widgets.Button(description="✅ Log Today's Exercise", button_style="success")
     output_area = widgets.Output()
 
