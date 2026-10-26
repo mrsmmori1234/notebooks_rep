@@ -1,64 +1,80 @@
+from datetime import datetime, date
 from pathlib import Path
+import calendar
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+from IPython.display import display, HTML
 
 def show_focus_chart():
-    # Graph style settings
-    sns.set_theme(style="whitegrid")
-    fig, ax = plt.subplots(figsize=(10, 4))
-
-    # Relative path configuration (compatible with GitHub & any environment)
     notebook_dir = Path.cwd()
-    csv_path = notebook_dir.parent / "outputs" / "focustime.csv"
+    csv_file = notebook_dir.parent / "outputs" / "focustime.csv"
+    
+    if not csv_file.exists():
+        print(f"No focus time records found yet at: {csv_file}")
+        return
 
-    try:
-        if not csv_path.exists():
-            print(f"No focus time records found yet at: {csv_path}")
-            return
+    # データのロード
+    df = pd.read_csv(csv_file)
+    if df.empty or 'Timestamp' not in df.columns:
+        print("No data available yet.")
+        return
 
-        # Load CSV
-        df = pd.read_csv(csv_path)
-        
-        if df.empty:
-            print("No data available yet. Run the timer to create records!")
-        else:
-            # Convert Timestamp to date type
-            df['Timestamp'] = pd.to_datetime(df['Timestamp'])
-            df['Date'] = df['Timestamp'].dt.date
-            
-            # Group and sum focus time by date (Minutes)
-            daily_df = df.groupby('Date')['Minutes'].sum().reset_index()
-            
-            # Draw bar plot
-            sns.barplot(
-                data=daily_df, 
-                x='Date', 
-                y='Minutes', 
-                hue='Date', 
-                palette='Blues_d', 
-                legend=False, 
-                ax=ax
-            )
-            
-            ax.set_title("Daily Focus Time Log", fontsize=14, fontweight='bold', pad=15)
-            ax.set_xlabel("Date", fontsize=12)
-            ax.set_ylabel("Total Minutes", fontsize=12)
-            plt.xticks(rotation=45)
-            
-            # Display total focus time text box
-            total_all_time = df['Minutes'].sum()
-            total_hours = total_all_time / 60
-            ax.text(
-                0.02, 0.85, 
-                f"Total Focus: {total_all_time} min ({total_hours:.1f} hours)", 
-                transform=ax.transAxes, 
-                fontsize=12, 
-                bbox=dict(boxstyle='round,pad=0.5', facecolor='yellow', alpha=0.3)
-            )
-            
-            plt.tight_layout()
-            plt.show()
+    df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+    df['Date'] = df['Timestamp'].dt.date
 
-    except Exception as e:
-        print(f"An error occurred while loading the CSV: {e}")
+    # 日ごとの合計分数を集計
+    daily_sum = df.groupby('Date')['Minutes'].sum()
+    daily_dict = daily_sum.to_dict()
+
+    # 現在の年・月を取得
+    now = datetime.now()
+    year, month = now.year, now.month
+
+    # カレンダーの生成 (月曜始まり)
+    cal = calendar.monthcalendar(year, month)
+    month_name = calendar.month_name[month]
+
+    # HTMLテーブルの組み立て
+    html = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin-top: 15px; height: auto;">
+        <h4 style="margin-bottom: 10px; color: #333;">⏱️ {month_name} {year} - Focus Time Calendar</h4>
+        <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 14px;">
+            <thead>
+                <tr style="background-color: #f2f2f2; color: #555;">
+                    <th style="padding: 8px; border: 1px solid #ddd;">Mon</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Tue</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Wed</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Thu</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Fri</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Sat</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Sun</th>
+                </tr>
+            </thead>
+            <tbody>
+    """
+
+    for week in cal:
+        html += "<tr>"
+        for day in week:
+            if day == 0:
+                html += '<td style="padding: 10px; border: 1px solid #ddd; background-color: #fafafa;"></td>'
+            else:
+                target_date = date(year, month, day)
+                focus_mins = daily_dict.get(target_date, 0)
+                
+                if focus_mins > 0:
+                    bg_color = "#e6f4ea"  # 薄い緑
+                    text_content = f"<b>{day}</b><br><span style='color: #137333; font-size: 11px; font-weight: bold;'>{focus_mins} min</span>"
+                else:
+                    bg_color = "#ffffff"
+                    text_content = f"<span style='color: #888;'>{day}</span>"
+
+                html += f'<td style="padding: 10px; border: 1px solid #ddd; background-color: {bg_color}; height: 55px; vertical-align: top;">{text_content}</td>'
+        html += "</tr>"
+
+    html += """
+            </tbody>
+        </table>
+    </div>
+    """
+    
+    display(HTML(html))
