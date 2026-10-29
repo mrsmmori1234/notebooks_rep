@@ -14,7 +14,7 @@ def show_tracker():
         csv_file.write_text("Date,Exercise\n", encoding="utf-8")
 
     today_str = date.today().strftime("%Y-%m-%d")
-    exercises = ["Stretching", "Plank Training", "Sqwat Training"]
+    exercises = ["Stretching", "Plunk Training", "Sqwat Training"]
     checkboxes = [widgets.Checkbox(value=False, description=ex) for ex in exercises]
 
     note_input = widgets.Text(layout=widgets.Layout(width='30px'))
