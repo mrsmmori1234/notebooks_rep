@@ -128,7 +128,7 @@ def show_tracker():
                     
                     if is_completed:
                         bg_color = "#e6f4ea"  # 薄い緑
-                        text_content = f"<b>{day}</b><br><span style='color: #137333; font-size: 11px; font-weight: bold;'>✅ 完了</span>"
+                        text_content = f"<b>{day}</b><br><span style='color: #137333; font-size: 11px; font-weight: bold;'>✅ Completed</span>"
                     else:
                         bg_color = "#ffffff"
                         text_content = f"<span style='color: #888;'>{day}</span>"
