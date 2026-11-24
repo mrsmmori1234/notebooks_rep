@@ -7,7 +7,7 @@ from IPython.display import display, HTML
 def show_focus_chart():
     notebook_dir = Path.cwd()
     csv_file = notebook_dir.parent / "outputs" / "focustime.csv"
-    
+
     if not csv_file.exists():
         print(f"No focus time records found yet at: {csv_file}")
         return
@@ -29,9 +29,15 @@ def show_focus_chart():
     now = datetime.now()
     year, month = now.year, now.month
 
-    # カレンダーの生成 (月曜始まり)
-    cal = calendar.monthcalendar(year, month)
+    # カレンダーの生成 (日曜始まり)
+    sun_cal = calendar.Calendar(firstweekday=calendar.SUNDAY)
+    cal = sun_cal.monthdayscalendar(year, month)
     month_name = calendar.month_name[month]
+
+    headers = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    th_html = "".join(
+        f'<th style="padding: 8px; border: 1px solid #ddd;">{h}</th>' for h in headers
+    )
 
     # HTMLテーブルの組み立て
     html = f"""
@@ -40,13 +46,7 @@ def show_focus_chart():
         <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 14px;">
             <thead>
                 <tr style="background-color: #f2f2f2; color: #555;">
-                    <th style="padding: 8px; border: 1px solid #ddd;">Mon</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Tue</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Wed</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Thu</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Fri</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Sat</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Sun</th>
+                    {th_html}
                 </tr>
             </thead>
             <tbody>
@@ -60,7 +60,7 @@ def show_focus_chart():
             else:
                 target_date = date(year, month, day)
                 focus_mins = daily_dict.get(target_date, 0)
-                
+
                 if focus_mins > 0:
                     bg_color = "#e6f4ea"  # 薄い緑
                     text_content = f"<b>{day}</b><br><span style='color: #137333; font-size: 11px; font-weight: bold;'>{focus_mins} min</span>"
@@ -76,5 +76,5 @@ def show_focus_chart():
         </table>
     </div>
     """
-    
+
     display(HTML(html))
